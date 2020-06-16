@@ -16,6 +16,7 @@
           </e>
         </e>
         <e p="rubiks-cube-scramble.csproj" t="IncludeRecursive" />
+        <e p="scoreboard.cs" t="Include" />
       </e>
       <e p="rubiks-cube-scramble.sln" t="IncludeFlat" />
     </e>
