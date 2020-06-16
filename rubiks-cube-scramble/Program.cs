@@ -26,7 +26,7 @@ namespace rubiks_cube_scramble
                 Console.WriteLine("1. Scoreboard for 3x3x3");
                 Console.WriteLine("2. Scoreboard for 2x2x2");
                 Console.WriteLine("3. Timer with scramble for 3x3x3");
-                Console.WriteLine("4. Timer with scramble for 3x3x3");
+                Console.WriteLine("4. Timer with scramble for 2x2x2");
                 Console.WriteLine("===========================================");
                 Console.WriteLine("Pick your option..");
                 
@@ -40,11 +40,14 @@ namespace rubiks_cube_scramble
                     {
                         Console.Clear();
                         List<Scoreboard> sortedScoreboard3 = scoreboard3.OrderBy(o => o.Time).ToList();
-
+                        
+                        Console.WriteLine("===========================================");
                         for (int i = 0; i < sortedScoreboard3.Count; i++)
                         {
                             Console.WriteLine($"{i + 1}. Time: {sortedScoreboard3[i].Time}, Scramble: {sortedScoreboard3[i].Scramble}");
                         }
+                        Console.WriteLine("===========================================");
+                        
                         Console.WriteLine("Type 'e' if you want back to menu");
                         key = Console.ReadKey(true).Key;
                         if (key == ConsoleKey.E)
@@ -54,16 +57,36 @@ namespace rubiks_cube_scramble
                     }
                 } else if (key == ConsoleKey.D2)
                 {
-                    Console.WriteLine("2");
+                    bool isNotCorrectKey = true;
+                    while (isNotCorrectKey)
+                    {
+                        Console.Clear();
+                        List<Scoreboard> sortedScoreboard2 = scoreboard2.OrderBy(o => o.Time).ToList();
+
+                        Console.WriteLine("===========================================");
+                        for (int i = 0; i < sortedScoreboard2.Count; i++)
+                        {
+                            Console.WriteLine($"{i + 1}. Time: {sortedScoreboard2[i].Time}, Scramble: {sortedScoreboard2[i].Scramble}");
+                        }
+                        Console.WriteLine("===========================================");
+                        
+                        Console.WriteLine("Type 'e' if you want back to menu");
+                        key = Console.ReadKey(true).Key;
+                        if (key == ConsoleKey.E)
+                        {
+                            isNotCorrectKey = false;
+                        }
+                    }
                 } else if (key == ConsoleKey.D3)
                 {
-                    Console.WriteLine("3");
+                    Scramble scramble = new Scramble();
+                    string newStramble = scramble.GenerateScramble();
+                    Console.WriteLine($"newStramble: { newStramble }");
+                    Console.ReadKey();
                 } else if (key == ConsoleKey.D4)
                 {
                     Console.WriteLine("4");
                 }
-
-                // Console.ReadKey();
             }
         }
     }
