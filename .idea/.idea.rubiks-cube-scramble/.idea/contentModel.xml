@@ -6,6 +6,7 @@
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="packages" t="ExcludeRecursive" />
       <e p="rubiks-cube-scramble" t="IncludeRecursive">
+        <e p="Menu.cs" t="Include" />
         <e p="Program.cs" t="Include" />
         <e p="Scoreboard.cs" t="Include" />
         <e p="Scramble.cs" t="Include" />
