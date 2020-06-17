@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace rubiks_cube_scramble
@@ -9,8 +10,9 @@ namespace rubiks_cube_scramble
         static void Main(string[] args)
         {
             int selectedMenuItem = -1;
-            bool isScoreboard = true;
             Menu menu = new Menu();
+            Scoreboard scoreboard = new Scoreboard();
+            Stopwatch stopwatch = new Stopwatch();
             
             do
             {
@@ -19,74 +21,18 @@ namespace rubiks_cube_scramble
                 switch (selectedMenuItem)
                 {
                     case -1: MainMenu(menu, ref selectedMenuItem); break;
-                    case 0: Scoreboard3Page(); selectedMenuItem = -1; break;
-                    case 1: Scoreboard2Page(); selectedMenuItem = -1; break;
-                    case 2: TimerScramble3Page(); selectedMenuItem = -1; break;
-                    case 3: TimerScramble2Page(); selectedMenuItem = -1; break;
+                    case 0:
+                        ScoreboardPage(scoreboard.Scoreboard3);
+                        selectedMenuItem = -1;
+                        break;
+                    case 1: 
+                        ScoreboardPage(scoreboard.Scoreboard2);
+                        selectedMenuItem = -1;
+                        break;
+                    case 2: TimerScramblePage(stopwatch); selectedMenuItem = -1; break;
+                    case 3: TimerScramblePage(stopwatch); selectedMenuItem = -1; break;
                 }
-
-                // if (key == ConsoleKey.D1)
-                // {
-                //     bool isNotCorrectKey = true;
-                //     while (isNotCorrectKey)
-                //     {
-                //         Console.Clear();
-                //         List<Scoreboard> sortedScoreboard3 = scoreboard3.OrderBy(o => o.Time).ToList();
-                //
-                //         Console.WriteLine("===========================================");
-                //         for (int i = 0; i < sortedScoreboard3.Count; i++)
-                //         {
-                //             Console.WriteLine(
-                //                 $"{i + 1}. Time: {sortedScoreboard3[i].Time}, Scramble: {sortedScoreboard3[i].Scramble}");
-                //         }
-                //
-                //         Console.WriteLine("===========================================");
-                //
-                //         Console.WriteLine("Type 'e' if you want back to menu");
-                //         key = Console.ReadKey(true).Key;
-                //         if (key == ConsoleKey.E)
-                //         {
-                //             isNotCorrectKey = false;
-                //         }
-                //     }
-                // }
-                // else if (key == ConsoleKey.D2)
-                // {
-                //     bool isNotCorrectKey = true;
-                //     while (isNotCorrectKey)
-                //     {
-                //         Console.Clear();
-                //         List<Scoreboard> sortedScoreboard2 = scoreboard2.OrderBy(o => o.Time).ToList();
-                //
-                //         Console.WriteLine("===========================================");
-                //         for (int i = 0; i < sortedScoreboard2.Count; i++)
-                //         {
-                //             Console.WriteLine(
-                //                 $"{i + 1}. Time: {sortedScoreboard2[i].Time}, Scramble: {sortedScoreboard2[i].Scramble}");
-                //         }
-                //
-                //         Console.WriteLine("===========================================");
-                //
-                //         Console.WriteLine("Type 'e' if you want back to menu");
-                //         key = Console.ReadKey(true).Key;
-                //         if (key == ConsoleKey.E)
-                //         {
-                //             isNotCorrectKey = false;
-                //         }
-                //     }
-                // }
-                // else if (key == ConsoleKey.D3)
-                // {
-                //     Scramble scramble = new Scramble();
-                //     string newStramble = scramble.GenerateScramble();
-                //     Console.WriteLine($"newStramble: {newStramble}");
-                //     Console.ReadKey();
-                // }
-                // else if (key == ConsoleKey.D4)
-                // {
-                //     Console.WriteLine("4");
-                // }
-            } while (isScoreboard);
+            } while (true);
         }
 
         static void MainMenu(Menu menu, ref int selectedMenuItem)
@@ -116,22 +62,21 @@ namespace rubiks_cube_scramble
             }
         }
 
-        static void Scoreboard3Page()
+        static void ScoreboardPage(List <ScoreboardItems> scoreboard)
         {
             bool isNotCorrectKey = true;
             while (isNotCorrectKey)
             {
                 Console.Clear();
-                Scoreboard scoreboard = new Scoreboard();
-                List<ScoreboardItems> sortedScoreboard3 = scoreboard.Scoreboard3.OrderBy(o => o.Time).ToList();
-
-                for (int i = 0; i < sortedScoreboard3.Count; i++)
+                List<ScoreboardItems> sortedScoreboard = scoreboard.OrderBy(o => o.Time).ToList();
+            
+                for (int i = 0; i < sortedScoreboard.Count; i++)
                 {
-                    Console.WriteLine($"{i + 1}. Time: {sortedScoreboard3[i].Time}, Scramble: {sortedScoreboard3[i].Scramble}");
+                    Console.WriteLine($"{i + 1}. Time: {sortedScoreboard[i].Time}, Scramble: {sortedScoreboard[i].Scramble}");
                 }
-
+            
                 Console.WriteLine("Type 'e' if you want back to menu");
-
+                
                 ConsoleKey key;
                 key = Console.ReadKey(true).Key;
                 if (key == ConsoleKey.E)
@@ -141,20 +86,42 @@ namespace rubiks_cube_scramble
             }
         }
 
-        static void Scoreboard2Page()
+        static void TimerScramblePage(Stopwatch stopwatch)
         {
-        
-        }
+            bool isNotCorrectKey = true;
+            bool isCounterActive = false;
+            Scramble scramble = new Scramble();
+            string newStramble = scramble.GenerateScramble();
+            
+            while (isNotCorrectKey)
+            {
+                Console.Clear();
+                Console.WriteLine($"newStramble: {newStramble}");
+                Console.WriteLine("Press space for start timer");
 
-        static void TimerScramble3Page()
-        {
-        
-        }
+                if (isCounterActive)
+                {
+                    Console.WriteLine("Time counting..");
+                }
 
-        static void TimerScramble2Page()
-        {
-        
+                ConsoleKey key;
+                key = Console.ReadKey(true).Key;
+
+                TimeSpan stopwatchElapsed = stopwatch.Elapsed;
+
+                if (key == ConsoleKey.Spacebar && Convert.ToInt32(stopwatchElapsed.TotalMilliseconds) == 0)
+                {
+                    stopwatch.Start();
+                    isCounterActive = true;
+                }
+                else if (key == ConsoleKey.Spacebar && Convert.ToInt32(stopwatchElapsed.TotalMilliseconds) > 0)
+                {
+                    stopwatch.Stop();
+                    isCounterActive = false;
+                    Console.WriteLine(stopwatchElapsed.ToString("mm\\:ss\\.ff"));
+                    Console.ReadKey();
+                }
+            }
         }
     }
-    
 }
