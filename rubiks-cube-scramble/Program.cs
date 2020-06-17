@@ -50,11 +50,11 @@ namespace rubiks_cube_scramble
                 if (menu.SelectedIndex == i)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine(menu.MainMenu[i].name);
+                    Console.WriteLine(menu.MainMenu[i].Name);
                 }
                 else
                 {
-                    Console.WriteLine(menu.MainMenu[i].name);
+                    Console.WriteLine(menu.MainMenu[i].Name);
                 }
             }
 
@@ -115,19 +115,19 @@ namespace rubiks_cube_scramble
                 key = Console.ReadKey(true).Key;
 
                 TimeSpan stopwatchElapsed = stopwatch.Elapsed;
+                int timeInMilliseconds = Convert.ToInt32(stopwatchElapsed.TotalMilliseconds);
 
-                if (key == ConsoleKey.Spacebar && Convert.ToInt32(stopwatchElapsed.TotalMilliseconds) == 0)
+                if (key == ConsoleKey.Spacebar && timeInMilliseconds == 0)
                 {
                     stopwatch.Start();
                     isCounterActive = true;
                 }
-                else if (key == ConsoleKey.Spacebar && Convert.ToInt32(stopwatchElapsed.TotalMilliseconds) > 0)
+                else if (key == ConsoleKey.Spacebar && timeInMilliseconds > 0)
                 {
                     stopwatch.Stop();
                     string formattedStopwatch = stopwatchElapsed.ToString("mm\\:ss\\.ff");
                     isCounterActive = false;
                     
-                    // TODO colors
                     Console.WriteLine($"Your time is: {formattedStopwatch}");
                     Console.WriteLine("Type 'e' to return to the menu. Type 'r' to get new scramble");
                     
