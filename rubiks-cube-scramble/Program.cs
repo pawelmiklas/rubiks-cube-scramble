@@ -12,8 +12,13 @@ namespace rubiks_cube_scramble
             int selectedMenuItem = -1;
             Menu menu = new Menu();
             Scoreboard scoreboard = new Scoreboard();
-            Stopwatch stopwatch = new Stopwatch();
+            Scramble scramble = new Scramble();
             
+            // scoreboard.Scoreboard3 = new List<ScoreboardItems>()
+            // {
+            //     new ScoreboardItems() { Scramble = "U2 L B2 R U R2 U' F2 R2 B R2 L2 D", Time = "00:51.33" },
+            // };
+
             do
             {
                 Console.Clear();
@@ -29,8 +34,23 @@ namespace rubiks_cube_scramble
                         ScoreboardPage(scoreboard.Scoreboard2);
                         selectedMenuItem = -1;
                         break;
-                    case 2: TimerScramblePage(stopwatch); selectedMenuItem = -1; break;
-                    case 3: TimerScramblePage(stopwatch); selectedMenuItem = -1; break;
+                    case 2:
+                        Stopwatch stopwatch = new Stopwatch();
+                        // scoreboard.Scoreboard3 = new List<ScoreboardItems>()
+                        // {
+                        //     TimerScramblePage(scramble, stopwatch)
+                        // };
+                        TimerScramblePage(scramble, stopwatch, scoreboard, true); 
+                        selectedMenuItem = -1;
+                        break;
+                    case 3: 
+                        Stopwatch stopwatch2 = new Stopwatch();
+                        // scoreboard.Scoreboard2 = new List<ScoreboardItems>()
+                        // {
+                        //     TimerScramblePage(scramble, stopwatch2)
+                        // };
+                        TimerScramblePage(scramble, stopwatch2, scoreboard, false); 
+                        selectedMenuItem = -1; break;
                 }
             } while (true);
         }
@@ -86,17 +106,20 @@ namespace rubiks_cube_scramble
             }
         }
 
-        static void TimerScramblePage(Stopwatch stopwatch)
+        // scoreboarditems
+        static void TimerScramblePage(Scramble scramble, Stopwatch stopwatch, Scoreboard scoreboard, bool isBigCube)
         {
+            Console.ResetColor();
             bool isNotCorrectKey = true;
             bool isCounterActive = false;
-            Scramble scramble = new Scramble();
-            string newStramble = scramble.GenerateScramble();
-            
+            string newScramble = scramble.GenerateScramble();
+            // Console.WriteLine($"isNotCorrectKey {isNotCorrectKey}");
+
             while (isNotCorrectKey)
             {
                 Console.Clear();
-                Console.WriteLine($"newStramble: {newStramble}");
+                // Console.WriteLine($"isNotCorrectKey {isNotCorrectKey}");
+                Console.WriteLine($"newScramble: {newScramble}");
                 Console.WriteLine("Press space for start timer");
 
                 if (isCounterActive)
@@ -117,9 +140,42 @@ namespace rubiks_cube_scramble
                 else if (key == ConsoleKey.Spacebar && Convert.ToInt32(stopwatchElapsed.TotalMilliseconds) > 0)
                 {
                     stopwatch.Stop();
+                    string formattedStopwatch = stopwatchElapsed.ToString("mm\\:ss\\.ff");
                     isCounterActive = false;
-                    Console.WriteLine(stopwatchElapsed.ToString("mm\\:ss\\.ff"));
-                    Console.ReadKey();
+                    
+                    // TODO colors
+                    Console.WriteLine($"Your time is: {formattedStopwatch}");
+                    Console.WriteLine("Type 'e' to return to the menu. Type 'r' to get new scramble");
+                    
+                    ConsoleKey newKey;
+                    newKey = Console.ReadKey(true).Key;
+                    
+                    if (isBigCube)
+                    {
+                        scoreboard.Scoreboard3 = new List<ScoreboardItems>()
+                        {
+                            new ScoreboardItems() {Scramble = newScramble, Time = formattedStopwatch }
+                        };
+                    }
+                    else
+                    {
+                        scoreboard.Scoreboard2 = new List<ScoreboardItems>()
+                        {
+                            new ScoreboardItems() {Scramble = newScramble, Time = formattedStopwatch }
+                        };
+                    }
+
+                    if (newKey == ConsoleKey.E)
+                    {
+                        isNotCorrectKey = false;
+                        // Console.WriteLine("Kliknięto E");
+                        Console.ReadKey();
+                    } else if (newKey == ConsoleKey.R)
+                    {
+                        Scramble newScrambleClass = new Scramble();
+                        Stopwatch newStopwatch = new Stopwatch();
+                        TimerScramblePage(newScrambleClass, newStopwatch, scoreboard, isBigCube);
+                    }
                 }
             }
         }

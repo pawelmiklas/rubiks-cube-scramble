@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace rubiks_cube_scramble
 {
@@ -21,14 +22,20 @@ namespace rubiks_cube_scramble
 
          public List<ScoreboardItems> Scoreboard3
          {
-             get => scoreboard3;
-             set => scoreboard3 = value;
+             get { return scoreboard3;  }
+             set
+             {
+                 scoreboard3 = scoreboard3.Concat(value).ToList();
+             }
          }
          
          public List<ScoreboardItems> Scoreboard2
          {
-             get => scoreboard2;
-             set => scoreboard2 = value;
+             get { return scoreboard2; }
+             set
+             {
+                 scoreboard2 = scoreboard2.Concat(value).ToList();
+             }
          }
     }
     public class ScoreboardItems

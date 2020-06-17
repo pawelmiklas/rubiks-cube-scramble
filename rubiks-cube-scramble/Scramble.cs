@@ -11,6 +11,8 @@ namespace rubiks_cube_scramble
 
         public string GenerateScramble()
         {
+            scramble.Clear();
+            
             for (int i = 0; i < 15; i++)
             {
                 Random randomTurnNumber = new Random();
