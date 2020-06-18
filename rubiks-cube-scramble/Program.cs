@@ -7,7 +7,7 @@ namespace rubiks_cube_scramble
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             int selectedMenuItem = -1;
             Menu menu = new Menu();
@@ -18,37 +18,48 @@ namespace rubiks_cube_scramble
             {
                 Console.Clear();
 
+                // show current menu item
                 switch (selectedMenuItem)
                 {
-                    case -1: MainMenu(menu, ref selectedMenuItem); break;
+                    // main menu page
+                    case -1:
+                        MainMenu(menu, ref selectedMenuItem);
+                        break;
+                    // scoreboard page for 3x3x3 cube
                     case 0:
                         ScoreboardPage(scoreboard.Scoreboard3);
                         selectedMenuItem = -1;
                         break;
+                    // scoreboard page for 2x2x2 cube
                     case 1: 
                         ScoreboardPage(scoreboard.Scoreboard2);
                         selectedMenuItem = -1;
                         break;
+                    // timer and scramble for 3x3x3 cube
                     case 2:
                         Stopwatch stopwatch = new Stopwatch();
                         TimerScramblePage(scramble, stopwatch, scoreboard, true); 
                         selectedMenuItem = -1;
                         break;
+                    // timer and scramble for 2x2x2 cube
                     case 3: 
                         Stopwatch stopwatch2 = new Stopwatch();
                         TimerScramblePage(scramble, stopwatch2, scoreboard, false); 
-                        selectedMenuItem = -1; break;
+                        selectedMenuItem = -1;
+                        break;
                 }
             } while (true);
         }
 
         static void MainMenu(Menu menu, ref int selectedMenuItem)
         {
+            // generate menu items
             for (int i = 0; i < menu.MainMenu.Count; i++)
             {
                 Console.ResetColor();
                 if (menu.SelectedIndex == i)
                 {
+                    // assign green color to active menu item
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine(menu.MainMenu[i].Name);
                 }
@@ -58,25 +69,32 @@ namespace rubiks_cube_scramble
                 }
             }
 
+            // get key from user
             ConsoleKey key;
             key = Console.ReadKey(true).Key;
 
+            // menu navigation - control by arrows
             switch (key)
             {
+                // arrow up - move up 
                 case ConsoleKey.UpArrow: menu.MoveUp(); break;
+                // arrow down - move down 
                 case ConsoleKey.DownArrow: menu.MoveDown(); break;
+                // enter - select menu item
                 case ConsoleKey.Enter: selectedMenuItem = menu.SelectedIndex; break;
             }
         }
 
         static void ScoreboardPage(List <ScoreboardItems> scoreboard)
         {
-            bool isNotCorrectKey = true;
-            while (isNotCorrectKey)
+            bool exit = false;
+            while (!exit)
             {
                 Console.Clear();
+                // get new scoreboard and sort it asc by time
                 List<ScoreboardItems> sortedScoreboard = scoreboard.OrderBy(o => o.Time).ToList();
             
+                // generate scoreboard with time and scramble
                 for (int i = 0; i < sortedScoreboard.Count; i++)
                 {
                     Console.WriteLine($"{i + 1}. Time: {sortedScoreboard[i].Time}, Scramble: {sortedScoreboard[i].Scramble}");
@@ -84,11 +102,12 @@ namespace rubiks_cube_scramble
             
                 Console.WriteLine("Type 'e' if you want back to menu");
                 
+                // read console key from user - if key is "e" go back to menu
                 ConsoleKey key;
                 key = Console.ReadKey(true).Key;
                 if (key == ConsoleKey.E)
                 {
-                    isNotCorrectKey = false;
+                    exit = true;
                 }
             }
         }
@@ -96,16 +115,17 @@ namespace rubiks_cube_scramble
         static void TimerScramblePage(Scramble scramble, Stopwatch stopwatch, Scoreboard scoreboard, bool isBigCube)
         {
             Console.ResetColor();
-            bool isNotCorrectKey = true;
+            bool exit = false;
             bool isCounterActive = false;
+            // generate new scramble
             string newScramble = scramble.GenerateScramble();
 
-            while (isNotCorrectKey)
+            while (!exit)
             {
                 Console.Clear();
                 Console.WriteLine($"newScramble: {newScramble}");
                 Console.WriteLine("Press space for start timer");
-
+                
                 if (isCounterActive)
                 {
                     Console.WriteLine("Time counting..");
@@ -114,17 +134,21 @@ namespace rubiks_cube_scramble
                 ConsoleKey key;
                 key = Console.ReadKey(true).Key;
 
+                // convert time to milliseconds
                 TimeSpan stopwatchElapsed = stopwatch.Elapsed;
                 int timeInMilliseconds = Convert.ToInt32(stopwatchElapsed.TotalMilliseconds);
 
                 if (key == ConsoleKey.Spacebar && timeInMilliseconds == 0)
                 {
+                    // start counting time
                     stopwatch.Start();
                     isCounterActive = true;
                 }
-                else if (key == ConsoleKey.Spacebar && timeInMilliseconds > 0)
+                else if (key == ConsoleKey.Spacebar && timeInMilliseconds > 0) 
                 {
+                    // stop counting time
                     stopwatch.Stop();
+                    // get formatted time
                     string formattedStopwatch = stopwatchElapsed.ToString("mm\\:ss\\.ff");
                     isCounterActive = false;
                     
@@ -133,10 +157,13 @@ namespace rubiks_cube_scramble
                     
                     ConsoleKey newKey;
                     newKey = Console.ReadKey(true).Key;
+                    
+                    // add result time with scramble to specific list
                     if (newKey == ConsoleKey.E || newKey == ConsoleKey.R)
                     {
                         if (isBigCube)
                         {
+                            // assign new item to scoreboard3
                             scoreboard.Scoreboard3 = new List<ScoreboardItems>()
                             {
                                 new ScoreboardItems() {Scramble = newScramble, Time = formattedStopwatch }
@@ -144,6 +171,7 @@ namespace rubiks_cube_scramble
                         }
                         else
                         {
+                            // assign new item to scoreboard2
                             scoreboard.Scoreboard2 = new List<ScoreboardItems>()
                             {
                                 new ScoreboardItems() {Scramble = newScramble, Time = formattedStopwatch }
@@ -153,12 +181,14 @@ namespace rubiks_cube_scramble
 
                     if (newKey == ConsoleKey.E)
                     {
-                        isNotCorrectKey = false;
+                        // go back to menu if key is equal 'e'
+                        exit = true;
                     } else if (newKey == ConsoleKey.R)
                     {
+                        // if key is equal 'r' invoke TimerScramblePage with new scramble and stopwatch
                         Scramble newScrambleClass = new Scramble();
                         Stopwatch newStopwatch = new Stopwatch();
-                        isNotCorrectKey = false;
+                        exit = true;
                         TimerScramblePage(newScrambleClass, newStopwatch, scoreboard, isBigCube);
                     }
                 }

@@ -13,14 +13,18 @@ namespace rubiks_cube_scramble
         {
             _scramble.Clear();
             
+            // generate random scramble
             for (int i = 0; i < 15; i++)
             {
+                // get single random wall turn
                 Random randomTurnNumber = new Random();
                 int randomTurn = randomTurnNumber.Next(_turns.Count);
                 
+                // get single random modifier
                 Random randomModifierNumber = new Random();
                 int randomModifier = randomModifierNumber.Next(_modifiers.Count);
 
+                // concat wall turn with modifier and add to list
                 string preparedSingleScramble = _turns[randomTurn] + _modifiers[randomModifier];
                 _scramble.Add(preparedSingleScramble);
             }
