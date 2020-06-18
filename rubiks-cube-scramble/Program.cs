@@ -158,43 +158,52 @@ namespace rubiks_cube_scramble
                     string formattedStopwatch = stopwatchElapsed.ToString("mm\\:ss\\.ff");
                     isCounterActive = false;
                     
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.WriteLine($"Your time is: {formattedStopwatch}");
+                    Console.ResetColor();
                     Console.WriteLine("Type 'e' to return to the menu. Type 'r' to get new scramble");
-                    
-                    ConsoleKey newKey;
-                    newKey = Console.ReadKey(true).Key;
-                    
-                    // add result time with scramble to specific list
-                    if (newKey == ConsoleKey.E || newKey == ConsoleKey.R)
-                    {
-                        
-                        List<ScoreboardItems> newResult = new List<ScoreboardItems>()
-                        {
-                            new ScoreboardItems() { Scramble = newScramble, Time = formattedStopwatch }
-                        };
-                        
-                        // assign new item to specific scoreboard
-                        if (isRegularCube)
-                        {
-                            scoreboard.Scoreboard3 = newResult;
-                        }
-                        else
-                        {
-                            scoreboard.Scoreboard2 = newResult;
-                        }
-                    }
 
-                    if (newKey == ConsoleKey.E)
+                    bool newExit = false;
+                    
+                    while (!newExit)
                     {
-                        // go back to menu if key is equal 'e'
-                        exit = true;
-                    } else if (newKey == ConsoleKey.R)
-                    {
-                        // if key is equal 'r' invoke TimerScramblePage with new scramble and stopwatch
-                        Scramble newScrambleClass = new Scramble();
-                        Stopwatch newStopwatch = new Stopwatch();
-                        exit = true;
-                        TimerScramblePage(newScrambleClass, newStopwatch, scoreboard, isRegularCube);
+                        ConsoleKey newKey;
+                        newKey = Console.ReadKey(true).Key;
+
+                        // add result time with scramble to specific list
+                        if (newKey == ConsoleKey.E || newKey == ConsoleKey.R)
+                        {
+                            List<ScoreboardItems> newResult = new List<ScoreboardItems>()
+                            {
+                                new ScoreboardItems() {Scramble = newScramble, Time = formattedStopwatch}
+                            };
+
+                            // assign new item to specific scoreboard
+                            if (isRegularCube)
+                            {
+                                scoreboard.Scoreboard3 = newResult;
+                            }
+                            else
+                            {
+                                scoreboard.Scoreboard2 = newResult;
+                            }
+
+                            newExit = true;
+                        }
+
+                        if (newKey == ConsoleKey.E)
+                        {
+                            // go back to menu if key is equal 'e'
+                            exit = true;
+                        }
+                        else if (newKey == ConsoleKey.R)
+                        {
+                            // if key is equal 'r' invoke TimerScramblePage with new scramble and stopwatch
+                            Scramble newScrambleClass = new Scramble();
+                            Stopwatch newStopwatch = new Stopwatch();
+                            exit = true;
+                            TimerScramblePage(newScrambleClass, newStopwatch, scoreboard, isRegularCube);
+                        }
                     }
                 }
             }
