@@ -5,11 +5,20 @@ using System.Linq;
 
 namespace rubiks_cube_scramble
 {
+    enum MenuItemsNames
+    {
+        MainMenu = -1,
+        ScoreboardPageRegular = 0,
+        ScoreboardPage = 1,
+        TimerScramblePageRegular = 2,
+        TimerScramblePage = 3,
+    }
+
     class Program
     {
         static void Main()
         {
-            int selectedMenuItem = -1;
+            int selectedMenuItem = (int) MenuItemsNames.MainMenu;
             Menu menu = new Menu();
             Scoreboard scoreboard = new Scoreboard();
             Scramble scramble = new Scramble();
@@ -22,30 +31,30 @@ namespace rubiks_cube_scramble
                 switch (selectedMenuItem)
                 {
                     // main menu page
-                    case -1:
+                    case (int)MenuItemsNames.MainMenu:
                         MainMenu(menu, ref selectedMenuItem);
                         break;
                     // scoreboard page for 3x3x3 cube
-                    case 0:
+                    case (int)MenuItemsNames.ScoreboardPageRegular:
                         ScoreboardPage(scoreboard.Scoreboard3);
-                        selectedMenuItem = -1;
+                        selectedMenuItem = (int)MenuItemsNames.MainMenu;
                         break;
                     // scoreboard page for 2x2x2 cube
-                    case 1: 
+                    case (int)MenuItemsNames.ScoreboardPage: 
                         ScoreboardPage(scoreboard.Scoreboard2);
-                        selectedMenuItem = -1;
+                        selectedMenuItem = (int)MenuItemsNames.MainMenu;
                         break;
                     // timer and scramble for 3x3x3 cube
-                    case 2:
+                    case (int)MenuItemsNames.TimerScramblePageRegular:
                         Stopwatch stopwatch = new Stopwatch();
                         TimerScramblePage(scramble, stopwatch, scoreboard, true); 
-                        selectedMenuItem = -1;
+                        selectedMenuItem = (int)MenuItemsNames.MainMenu;
                         break;
                     // timer and scramble for 2x2x2 cube
-                    case 3: 
+                    case (int)MenuItemsNames.TimerScramblePage: 
                         Stopwatch stopwatch2 = new Stopwatch();
                         TimerScramblePage(scramble, stopwatch2, scoreboard, false); 
-                        selectedMenuItem = -1;
+                        selectedMenuItem = (int)MenuItemsNames.MainMenu;
                         break;
                 }
             } while (true);
@@ -112,7 +121,7 @@ namespace rubiks_cube_scramble
             }
         }
 
-        static void TimerScramblePage(Scramble scramble, Stopwatch stopwatch, Scoreboard scoreboard, bool isBigCube)
+        static void TimerScramblePage(Scramble scramble, Stopwatch stopwatch, Scoreboard scoreboard, bool isRegularCube)
         {
             Console.ResetColor();
             bool exit = false;
@@ -161,7 +170,7 @@ namespace rubiks_cube_scramble
                     // add result time with scramble to specific list
                     if (newKey == ConsoleKey.E || newKey == ConsoleKey.R)
                     {
-                        if (isBigCube)
+                        if (isRegularCube)
                         {
                             // assign new item to scoreboard3
                             scoreboard.Scoreboard3 = new List<ScoreboardItems>()
@@ -189,7 +198,7 @@ namespace rubiks_cube_scramble
                         Scramble newScrambleClass = new Scramble();
                         Stopwatch newStopwatch = new Stopwatch();
                         exit = true;
-                        TimerScramblePage(newScrambleClass, newStopwatch, scoreboard, isBigCube);
+                        TimerScramblePage(newScrambleClass, newStopwatch, scoreboard, isRegularCube);
                     }
                 }
             }
