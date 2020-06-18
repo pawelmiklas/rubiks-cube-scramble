@@ -70,12 +70,9 @@ namespace rubiks_cube_scramble
                 {
                     // assign green color to active menu item
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine(menu.MainMenu[i].Name);
                 }
-                else
-                {
-                    Console.WriteLine(menu.MainMenu[i].Name);
-                }
+                
+                Console.WriteLine(menu.MainMenu[i].Name);
             }
 
             // get key from user
@@ -170,21 +167,20 @@ namespace rubiks_cube_scramble
                     // add result time with scramble to specific list
                     if (newKey == ConsoleKey.E || newKey == ConsoleKey.R)
                     {
+                        
+                        List<ScoreboardItems> newResult = new List<ScoreboardItems>()
+                        {
+                            new ScoreboardItems() { Scramble = newScramble, Time = formattedStopwatch }
+                        };
+                        
+                        // assign new item to specific scoreboard
                         if (isRegularCube)
                         {
-                            // assign new item to scoreboard3
-                            scoreboard.Scoreboard3 = new List<ScoreboardItems>()
-                            {
-                                new ScoreboardItems() {Scramble = newScramble, Time = formattedStopwatch }
-                            };
+                            scoreboard.Scoreboard3 = newResult;
                         }
                         else
                         {
-                            // assign new item to scoreboard2
-                            scoreboard.Scoreboard2 = new List<ScoreboardItems>()
-                            {
-                                new ScoreboardItems() {Scramble = newScramble, Time = formattedStopwatch }
-                            };
+                            scoreboard.Scoreboard2 = newResult;
                         }
                     }
 
